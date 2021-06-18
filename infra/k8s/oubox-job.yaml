@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: outboxjob-deployment
+  labels:
+    app: outboxjob
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: outboxjob
+  template:
+    metadata:
+      labels:
+        app: outboxjob
+    spec:
+      containers:
+      - name: outboxjob
+        image: odise/busybox-curl
+        args:
+        - /bin/sh
+        - -c
+        - while true; do curl -X POST http://todos-srv:3000/outbox; sleep 10; done

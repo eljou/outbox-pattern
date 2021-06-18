@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: todos-srv
+  labels:
+    app: todos
+spec:
+  type: NodePort
+  ports:
+    - protocol: TCP
+      name: http
+      port: 3000
+      targetPort: 3000
+      nodePort: 30000
+  selector:
+    app: todos
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: todos-app-configmap
+immutable: true
+data:
+  .vars: |
+    NODE_ENV=development
+    PORT=3000
+    DB_URI=mongodb://mongod-0.mongodb-service,mongod-1.mongodb-service,mongod-2.mongodb-service/todos-app?replicaSet=MainRepSet
+    KAFKA_MESSAGE_BROKERS=kafka-service:9092
+    KAFKA_PUB_TIMEOUT=9500
+
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: todos-depl
+  labels:
+    app: todos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todos
+  template:
+    metadata:
+      labels:
+        app: todos
+    spec:
+      containers:
+        - name: todos
+          image: jou/todos
+          ports:
+            - containerPort: 3000
+          resources:
+            limits:
+              cpu: 100m
+              memory: 256Mi
+            requests:
+              cpu: 20m
+              memory: 64Mi
+          volumeMounts:
+            - name: app-env-file
+              mountPath: /app/env
+              readOnly: true
+      volumes:
+        - name: app-env-file
+          configMap:
+            name: todos-app-configmap

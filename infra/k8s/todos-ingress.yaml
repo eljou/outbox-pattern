@@ -1,0 +1,15 @@
+# apiVersion: networking.k8s.io/v1beta1 # for versions before 1.14 use extensions/v1beta1
+# kind: Ingress
+# metadata:
+#   name: todos
+#   annotations:
+#     nginx.ingress.kubernetes.io/use-regex: "true"
+# spec:
+#   rules:
+#   - host: todos.dev
+#     http:
+#       paths:
+#       - path: /?(.*)
+#         backend:
+#           serviceName: todos-srv
+#           servicePort: 3000

@@ -1,0 +1,26 @@
+GET http://localhost:3000/ping
+
+###
+POST http://localhost:3000/todos  HTTP/1.1
+content-type: application/json
+
+{
+    "description": "Take the dog out"
+}
+
+###
+POST http://localhost:3000/outbox  HTTP/1.1
+
+### From cluster
+GET http://localhost:30000/ping
+
+###
+POST http://localhost:30000/todos  HTTP/1.1
+content-type: application/json
+
+{
+    "description": "Take the dog out 4"
+}
+
+###
+POST http://localhost:30000/outbox  HTTP/1.1

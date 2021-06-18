@@ -1,0 +1,20 @@
+apiVersion: skaffold/v2beta13
+kind: Config
+metadata:
+  name: sample-app
+build:
+  artifacts:
+  - image: jou/todos
+    context: todos
+    docker:
+      dockerfile: Dockerfile
+    sync:
+      manual:
+      # Sync all the javascript files that are in the src folder
+      # with the container src folder
+      - src: 'src/**/*.ts'
+        dest: .
+deploy:
+  kubectl:
+    manifests:
+    - infra/k8s/*
