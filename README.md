@@ -14,3 +14,5 @@ This repo holds a simple TODOS app with outbox pattern implementation publishing
 - Run all deployments with skaffold
   - `skaffold dev`
 - Monitor execution and enjoy
+
+End
